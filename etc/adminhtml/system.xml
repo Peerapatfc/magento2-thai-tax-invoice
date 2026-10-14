@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="thai_tax_invoice" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Thai Tax Invoice</label>
+            <tab>general</tab>
+            <resource>Peerapatfc_ThaiTaxInvoice::config</resource>
+            <group id="seller" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Seller (the business issuing the invoice)</label>
+                <field id="name" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Registered name</label>
+                    <comment>The name registered with the Revenue Department.</comment>
+                </field>
+                <field id="tax_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tax ID</label>
+                    <backend_model>Peerapatfc\ThaiTaxInvoice\Model\Config\Backend\TaxId</backend_model>
+                    <comment>13 digits. The check digit is verified when you save. Dashes and spaces are removed.</comment>
+                </field>
+                <field id="branch" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Branch code</label>
+                    <backend_model>Peerapatfc\ThaiTaxInvoice\Model\Config\Backend\Branch</backend_model>
+                    <comment>5 digits. 00000 is the head office.</comment>
+                </field>
+                <field id="address" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Registered address</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

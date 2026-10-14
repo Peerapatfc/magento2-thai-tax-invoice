@@ -1,0 +1,22 @@
+{
+    "name": "peerapatfc/magento2-thai-tax-invoice",
+    "description": "Thai tax invoice (ใบกำกับภาษี) support for Magento 2: tax ID and branch validation, seller details and a REST check",
+    "type": "magento2-module",
+    "license": "MIT",
+    "keywords": ["magento2", "magento", "thailand", "thai", "tax-invoice", "vat", "tax-id"],
+    "require": {
+        "php": "~8.2.0||~8.3.0||~8.4.0||~8.5.0",
+        "magento/framework": ">=103.0.7",
+        "magento/module-config": "*",
+        "magento/module-store": "*",
+        "magento/module-webapi": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Peerapatfc\\ThaiTaxInvoice\\": ""
+        }
+    }
+}

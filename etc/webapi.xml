@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/thai-tax-invoice/tax-id/:taxId/valid" method="GET">
+        <service class="Peerapatfc\ThaiTaxInvoice\Api\TaxIdCheckInterface" method="isValid"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>
