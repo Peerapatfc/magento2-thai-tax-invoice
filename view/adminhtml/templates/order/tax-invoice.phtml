@@ -9,6 +9,7 @@ $request = $viewModel->getRequest();
 if ($request === null) {
     return;
 }
+$issued = $viewModel->getIssuedInvoice();
 ?>
 <section class="admin__page-section order-tax-invoice">
     <div class="admin__page-section-title">
@@ -17,6 +18,18 @@ if ($request === null) {
     <div class="admin__page-section-content">
         <table class="admin__table-secondary">
             <tbody>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Tax invoice number')) ?></th>
+                <td>
+                    <?php if ($issued): ?>
+                        <strong><?= $escaper->escapeHtml($issued['number']) ?></strong>
+                        (<a href="<?= $escaper->escapeUrl($issued['print_url']) ?>" target="_blank"><?=
+                            $escaper->escapeHtml(__('Print')) ?></a>)
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml(__('Not issued yet')) ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
             <tr>
                 <th><?= $escaper->escapeHtml(__('Invoice for')) ?></th>
                 <td>
@@ -49,5 +62,12 @@ if ($request === null) {
             </tr>
             </tbody>
         </table>
+        <?php if (!$issued && $viewModel->hasNoVat()): ?>
+            <p class="message message-warning">
+                <?= $escaper->escapeHtml(__(
+                    'This order has no VAT. A tax invoice normally shows VAT: check the tax settings before issuing it.'
+                )) ?>
+            </p>
+        <?php endif; ?>
     </div>
 </section>

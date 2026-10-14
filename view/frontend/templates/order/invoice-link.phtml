@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+/** @var \Peerapatfc\ThaiTaxInvoice\ViewModel\OrderInvoiceLink $viewModel */
+$viewModel = $block->getData('view_model');
+$url = $viewModel->getPrintUrl();
+if ($url === null) {
+    return;
+}
+?>
+<a class="action print" href="<?= $escaper->escapeUrl($url) ?>" target="_blank" rel="noopener">
+    <span><?= $escaper->escapeHtml(__('Print Tax Invoice')) ?></span>
+</a>

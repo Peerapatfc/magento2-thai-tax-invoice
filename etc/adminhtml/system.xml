@@ -13,6 +13,22 @@
                     <comment>Luma checkout, payment step. The buyer gives the name, tax ID and branch for the invoice; the address is the billing address.</comment>
                 </field>
             </group>
+            <group id="numbering" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Tax invoice numbers</label>
+                <field id="prefix" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prefix</label>
+                    <comment>{Y} is the year as 2026 and {y} as 26. The running number starts again at 1 for each different prefix, so a year in the prefix starts a new series every January. Numbers have no gaps. Change it only before the first invoice of a period.</comment>
+                </field>
+                <field id="padding" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Digits in the running number</label>
+                    <comment>1 to 12. 6 gives INV2026-000001.</comment>
+                </field>
+                <field id="auto_issue" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Issue when the order is invoiced</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When Magento creates an invoice for an order that asked for a tax invoice, issue the tax invoice too. Off: use the button on the order. When a tax invoice must be issued (for example at payment or at delivery) is set by the Revenue Department, so check with your accountant.</comment>
+                </field>
+            </group>
             <group id="seller" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Seller (the business issuing the invoice)</label>
                 <field id="name" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

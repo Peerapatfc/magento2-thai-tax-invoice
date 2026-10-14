@@ -1,0 +1,153 @@
+<?php
+/**
+ * A tax invoice, as a page that prints well (the browser can save it as a PDF).
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+/** @var \Peerapatfc\ThaiTaxInvoice\ViewModel\InvoiceDocument $viewModel */
+$viewModel = $block->getData('view_model');
+$doc = $block->getData('document');
+$seller = $doc['seller'];
+$buyer = $doc['buyer'];
+$currency = $doc['currency'];
+?>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= $escaper->escapeHtml('ใบกำกับภาษี ' . $doc['number']) ?></title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            color: #222;
+            font: 14px/1.5 "Sarabun", "Noto Sans Thai", Tahoma, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+        }
+        .page { margin: 0 auto; max-width: 820px; padding: 32px; }
+        h1 { font-size: 26px; margin: 0; }
+        h1 small { color: #666; display: block; font-size: 14px; font-weight: 400; }
+        .head { align-items: flex-start; display: flex; justify-content: space-between; margin-bottom: 24px; }
+        .meta { text-align: right; }
+        .meta div span { color: #666; }
+        .parties { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; margin-bottom: 24px; }
+        .party { border: 1px solid #ccc; border-radius: 4px; padding: 12px 14px; }
+        .party h2 {
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            margin: 0 0 6px;
+            text-transform: uppercase;
+        }
+        .party strong { display: block; font-size: 15px; }
+        .addr { white-space: pre-line; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border-bottom: 1px solid #ddd; padding: 8px 6px; text-align: left; vertical-align: top; }
+        th { background: #f3f3f3; font-size: 12px; }
+        .num { text-align: right; white-space: nowrap; }
+        .totals { margin: 16px 0 0 auto; width: 55%; }
+        .totals td { border: 0; padding: 4px 6px; }
+        .totals .grand td {
+            border-top: 2px solid #222;
+            font-size: 16px;
+            font-weight: 700;
+            padding-top: 8px;
+        }
+        .note { color: #666; font-size: 12px; margin-top: 28px; }
+        .actions { margin-bottom: 16px; text-align: right; }
+        .actions button { cursor: pointer; font: inherit; padding: 6px 16px; }
+        @media print {
+            .actions { display: none; }
+            .page { max-width: none; padding: 0; }
+            @page { margin: 14mm; }
+        }
+        @media (max-width: 640px) { .parties { grid-template-columns: 1fr; } .totals { width: 100%; } }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="actions">
+        <button type="button" onclick="window.print()"><?= $escaper->escapeHtml('พิมพ์ / บันทึกเป็น PDF') ?></button>
+    </div>
+    <div class="head">
+        <h1>ใบกำกับภาษี <small>Tax Invoice</small></h1>
+        <div class="meta">
+            <div><span>เลขที่ / No.</span> <strong><?= $escaper->escapeHtml($doc['number']) ?></strong></div>
+            <div><span>วันที่ / Date</span> <?= $escaper->escapeHtml($viewModel->thaiDate($doc['date'])) ?></div>
+            <div><span>คำสั่งซื้อ / Order</span> <?= $escaper->escapeHtml($doc['order_increment_id']) ?></div>
+        </div>
+    </div>
+
+    <div class="parties">
+        <div class="party">
+            <h2>ผู้ขาย / Seller</h2>
+            <strong><?= $escaper->escapeHtml($seller['name']) ?></strong>
+            <div class="addr"><?= $escaper->escapeHtml($seller['address']) ?></div>
+            <div>เลขประจำตัวผู้เสียภาษี: <?= $escaper->escapeHtml($seller['tax_id']) ?></div>
+            <div><?= $escaper->escapeHtml($viewModel->branchLabel($seller['branch'])) ?></div>
+        </div>
+        <div class="party">
+            <h2>ผู้ซื้อ / Buyer</h2>
+            <strong><?= $escaper->escapeHtml($buyer['name']) ?></strong>
+            <div class="addr"><?= $escaper->escapeHtml($buyer['address']) ?></div>
+            <?php if ($buyer['tax_id'] !== ''): ?>
+                <div>เลขประจำตัวผู้เสียภาษี: <?= $escaper->escapeHtml($buyer['tax_id']) ?></div>
+            <?php endif; ?>
+            <?php if ($buyer['vat_registered']): ?>
+                <div><?= $escaper->escapeHtml($viewModel->branchLabel($buyer['branch'])) ?></div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>รายการ / Description</th>
+            <th class="num">จำนวน / Qty</th>
+            <th class="num">ราคาต่อหน่วย / Unit price</th>
+            <th class="num">จำนวนเงิน / Amount (<?= $escaper->escapeHtml($currency) ?>)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($doc['lines'] as $i => $line): ?>
+            <tr>
+                <td><?= (int)$i + 1 ?></td>
+                <td>
+                    <?= $escaper->escapeHtml($line['description']) ?>
+                    <?php if ($line['sku'] !== ''): ?>
+                        <br><small><?= $escaper->escapeHtml($line['sku']) ?></small>
+                    <?php endif; ?>
+                </td>
+                <td class="num"><?= $escaper->escapeHtml($viewModel->qty($line['qty'])) ?></td>
+                <td class="num"><?= $escaper->escapeHtml($viewModel->money($line['unit_price'])) ?></td>
+                <td class="num"><?= $escaper->escapeHtml($viewModel->money($line['amount'])) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <table class="totals">
+        <tr>
+            <td>มูลค่าก่อนภาษีมูลค่าเพิ่ม / Amount before VAT</td>
+            <td class="num"><?= $escaper->escapeHtml($viewModel->money($doc['before_vat'])) ?></td>
+        </tr>
+        <tr>
+            <td>
+                ภาษีมูลค่าเพิ่ม / VAT
+                <?= $doc['vat_rate'] ? $escaper->escapeHtml((string)(float)$doc['vat_rate']) . '%' : '' ?>
+            </td>
+            <td class="num"><?= $escaper->escapeHtml($viewModel->money($doc['vat'])) ?></td>
+        </tr>
+        <tr class="grand">
+            <td>รวมทั้งสิ้น / Total (<?= $escaper->escapeHtml($currency) ?>)</td>
+            <td class="num"><?= $escaper->escapeHtml($viewModel->money($doc['total'])) ?></td>
+        </tr>
+    </table>
+
+    <p class="note">เอกสารนี้ออกจากระบบร้านค้าออนไลน์ / Issued by the online store.</p>
+</div>
+</body>
+</html>

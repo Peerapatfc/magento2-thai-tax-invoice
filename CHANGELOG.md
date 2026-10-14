@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.0
+
+Issues the tax invoice.
+
+- **Issue Tax Invoice** on the admin order page (for orders that asked for one; needs the new permission
+  *Issue Thai Tax Invoice*). The order then gets the next invoice number and the page shows **Print Tax Invoice**.
+  Optionally the invoice is issued by itself when Magento invoices the order
+  (**Issue when the order is invoiced**, off by default).
+- **Numbers** have a prefix and a running number, for example `INV2026-000001`. The running number starts again for
+  each different prefix, so `{Y}` (or `{y}`) in the prefix gives a new series every January. They are given inside
+  the same database transaction as the invoice, so they have no gaps and two people cannot get the same one.
+- An issued invoice is a **snapshot**: seller, buyer, lines and VAT as they were. Changing the order or the seller's
+  settings afterwards does not change it. It cannot be edited or deleted, and an order that has one cannot be deleted.
+- **Print page**: Thai with English beside it, Buddhist-era date, seller and buyer with tax ID and head office or
+  branch, lines, amount before VAT, VAT and total. Admin opens it from the order; a signed-in customer opens their own
+  from **My Account > My Orders > View Order**. The browser's Print can save it as a PDF.
+- Seller settings are required to issue: registered name, a valid tax ID and the address.
+
 ## 0.4.0
 
 The form follows what the Revenue Department asks for (Revenue Code section 86/4 and Notification No. 199), which

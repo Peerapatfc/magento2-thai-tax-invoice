@@ -5,6 +5,11 @@
             <checkout>
                 <enabled>1</enabled>
             </checkout>
+            <numbering>
+                <prefix>INV{Y}-</prefix>
+                <padding>6</padding>
+                <auto_issue>0</auto_issue>
+            </numbering>
             <seller>
                 <branch>00000</branch>
             </seller>

@@ -16,4 +16,30 @@
         <column xsi:type="varchar" name="thai_tax_invoice_tax_id" nullable="true" length="13" comment="Tax invoice: tax ID"/>
         <column xsi:type="varchar" name="thai_tax_invoice_branch" nullable="true" length="5" comment="Tax invoice: branch"/>
     </table>
+    <table name="peerapatfc_tax_invoice_sequence" resource="default" engine="innodb" comment="Tax invoice numbers: last number per prefix">
+        <column xsi:type="varchar" name="prefix" nullable="false" length="64" comment="Resolved prefix, e.g. INV2026-"/>
+        <column xsi:type="int" name="last_number" unsigned="true" nullable="false" default="0" comment="Last number given"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="prefix"/>
+        </constraint>
+    </table>
+    <table name="peerapatfc_tax_invoice" resource="default" engine="innodb" comment="Tax invoices that were issued">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order"/>
+        <column xsi:type="varchar" name="invoice_number" nullable="false" length="64" comment="Tax invoice number"/>
+        <column xsi:type="timestamp" name="issued_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Issued at"/>
+        <column xsi:type="mediumtext" name="snapshot" nullable="false" comment="What the invoice said when it was issued (JSON)"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PEERAPATFC_TAX_INVOICE_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="peerapatfc_tax_invoice" column="order_id" referenceTable="sales_order"
+                    referenceColumn="entity_id" onDelete="NO ACTION"/>
+        <constraint xsi:type="unique" referenceId="PEERAPATFC_TAX_INVOICE_ORDER_ID">
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="PEERAPATFC_TAX_INVOICE_INVOICE_NUMBER">
+            <column name="invoice_number"/>
+        </constraint>
+    </table>
 </schema>

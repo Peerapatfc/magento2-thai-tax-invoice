@@ -18,5 +18,29 @@
             "thai_tax_invoice_vat_registered": true,
             "thai_tax_invoice_address": true
         }
+    },
+    "peerapatfc_tax_invoice_sequence": {
+        "column": {
+            "prefix": true,
+            "last_number": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "peerapatfc_tax_invoice": {
+        "column": {
+            "entity_id": true,
+            "order_id": true,
+            "invoice_number": true,
+            "issued_at": true,
+            "snapshot": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "PEERAPATFC_TAX_INVOICE_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "PEERAPATFC_TAX_INVOICE_ORDER_ID": true,
+            "PEERAPATFC_TAX_INVOICE_INVOICE_NUMBER": true
+        }
     }
 }

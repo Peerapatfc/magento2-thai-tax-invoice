@@ -3,4 +3,7 @@
     <event name="sales_model_service_quote_submit_before">
         <observer name="peerapatfc_thai_tax_invoice_copy_to_order" instance="Peerapatfc\ThaiTaxInvoice\Observer\CopyRequestToOrder"/>
     </event>
+    <event name="sales_order_invoice_save_after">
+        <observer name="peerapatfc_thai_tax_invoice_issue_on_invoice" instance="Peerapatfc\ThaiTaxInvoice\Observer\IssueOnInvoice"/>
+    </event>
 </config>
