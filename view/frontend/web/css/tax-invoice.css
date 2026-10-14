@@ -28,6 +28,7 @@
 }
 
 .thai-tax-invoice-fields .message,
+.thai-tax-invoice-fields .field-type,
 .thai-tax-invoice-fields .field-name,
 .thai-tax-invoice-fields .note {
     grid-column: 1 / -1;
@@ -63,6 +64,29 @@
 
 .thai-tax-invoice-fields .message.error {
     margin: 0;
+}
+
+/* The type is a radio pair, not a text field: the "required" star would only add noise. */
+.thai-tax-invoice-fields .field-type .label::after {
+    content: none;
+}
+
+.thai-tax-invoice-types {
+    display: flex;
+    gap: 24px;
+}
+
+.thai-tax-invoice-types label {
+    cursor: pointer;
+}
+
+.thai-tax-invoice-types input {
+    margin-right: 6px;
+}
+
+/* An individual has no branch, so the tax ID takes the whole row. */
+.thai-tax-invoice-fields .field.field-wide {
+    grid-column: 1 / -1;
 }
 
 @media (max-width: 640px) {

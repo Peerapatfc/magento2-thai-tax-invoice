@@ -18,17 +18,25 @@ if ($request === null) {
         <table class="admin__table-secondary">
             <tbody>
             <tr>
+                <th><?= $escaper->escapeHtml(__('Invoice for')) ?></th>
+                <td>
+                    <?= $escaper->escapeHtml($request['type'] === 'individual' ? __('Individual') : __('Company')) ?>
+                </td>
+            </tr>
+            <tr>
                 <th><?= $escaper->escapeHtml(__('Name on the invoice')) ?></th>
                 <td><?= $escaper->escapeHtml($request['name']) ?></td>
             </tr>
             <tr>
                 <th><?= $escaper->escapeHtml(__('Tax ID')) ?></th>
-                <td><?= $escaper->escapeHtml($request['tax_id']) ?></td>
+                <td><?= $escaper->escapeHtml($request['tax_id'] !== '' ? $request['tax_id'] : __('Not given')) ?></td>
             </tr>
+            <?php if ($request['type'] === 'company'): ?>
             <tr>
                 <th><?= $escaper->escapeHtml(__('Branch code')) ?></th>
                 <td><?= $escaper->escapeHtml($request['branch']) ?></td>
             </tr>
+            <?php endif; ?>
             </tbody>
         </table>
         <p><?= $escaper->escapeHtml(__('The invoice is made out to the billing address of this order.')) ?></p>

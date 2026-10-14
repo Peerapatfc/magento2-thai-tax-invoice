@@ -5,8 +5,9 @@ issue an invoice yet.**
 
 ## What it does now
 
-- **Checkout (Luma):** on the payment step the buyer can tick "I want a full tax invoice" and give the name, tax ID
-  and branch. They are checked in the browser and again on the server (guests and signed-in customers), kept on the
+- **Checkout (Luma):** on the payment step the buyer can tick "I want a full tax invoice", choose **company** or **individual** and
+  give the name, tax ID and branch (a company needs the tax ID and branch; an individual only the name, the ID is
+  optional and there is no branch). They are checked in the browser and again on the server (guests and signed-in customers), kept on the
   order and shown in the admin order view. The invoice address is the billing address. Turn it off under
   **Stores > Configuration > General > Thai Tax Invoice > Checkout**.
 - Checks a Thai **tax ID** (13 digits with a correct check digit) and a **branch code** (5 digits, `00000` is the
@@ -17,6 +18,9 @@ issue an invoice yet.**
   and check digit only.
 
 A correct check digit does **not** mean the number is registered. The module never asks the Revenue Department.
+
+This is software, not tax advice. What a full tax invoice must show about the buyer, and when, is set by the Revenue
+Department: check it with your accountant before you rely on it.
 
 ## What it does not do yet
 

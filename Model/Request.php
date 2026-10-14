@@ -12,6 +12,22 @@ class Request extends AbstractSimpleObject implements RequestInterface
     /**
      * @inheritdoc
      */
+    public function getType(): ?string
+    {
+        return $this->_get(self::TYPE);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setType(?string $type): RequestInterface
+    {
+        return $this->setData(self::TYPE, $type);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getName(): ?string
     {
         return $this->_get(self::NAME);

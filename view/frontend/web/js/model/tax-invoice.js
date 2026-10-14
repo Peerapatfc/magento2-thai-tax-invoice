@@ -8,6 +8,7 @@ define([
 
     return {
         requested: ko.observable(false),
+        type: ko.observable('company'),
         name: ko.observable(''),
         taxId: ko.observable(''),
         branch: ko.observable('00000'),

@@ -9,6 +9,21 @@
     </div>
     <div class="thai-tax-invoice-fields" data-bind="visible: requested">
         <div class="message error" data-bind="visible: error, text: error"></div>
+        <div class="field required field-type">
+            <span class="label" translate="'Invoice for'"></span>
+            <div class="thai-tax-invoice-types">
+                <label for="thai-tax-invoice-type-company">
+                    <input type="radio" id="thai-tax-invoice-type-company" name="thai_tax_invoice_type" value="company"
+                           data-bind="checked: type">
+                    <span translate="'Company'"></span>
+                </label>
+                <label for="thai-tax-invoice-type-individual">
+                    <input type="radio" id="thai-tax-invoice-type-individual" name="thai_tax_invoice_type" value="individual"
+                           data-bind="checked: type">
+                    <span translate="'Individual'"></span>
+                </label>
+            </div>
+        </div>
         <div class="field required field-name">
             <label class="label" for="thai-tax-invoice-name"><span translate="'Name on the invoice'"></span></label>
             <div class="control">
@@ -16,14 +31,17 @@
                        data-bind="value: buyerName, valueUpdate: 'afterkeydown'">
             </div>
         </div>
-        <div class="field required">
-            <label class="label" for="thai-tax-invoice-tax-id"><span translate="'Tax ID (13 digits)'"></span></label>
+        <div class="field" data-bind="css: {required: isCompany, 'field-wide': !isCompany()}">
+            <label class="label" for="thai-tax-invoice-tax-id">
+                <span data-bind="visible: isCompany" translate="'Tax ID (13 digits)'"></span>
+                <span data-bind="visible: !isCompany()" translate="'National ID or tax ID (13 digits, optional)'"></span>
+            </label>
             <div class="control">
                 <input type="text" id="thai-tax-invoice-tax-id" class="input-text" maxlength="20" inputmode="numeric"
                        data-bind="value: taxId, valueUpdate: 'afterkeydown'">
             </div>
         </div>
-        <div class="field required">
+        <div class="field required" data-bind="visible: isCompany">
             <label class="label" for="thai-tax-invoice-branch"><span translate="'Branch code (00000 = head office)'"></span></label>
             <div class="control">
                 <input type="text" id="thai-tax-invoice-branch" class="input-text" maxlength="5" inputmode="numeric"

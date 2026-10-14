@@ -18,9 +18,10 @@ define([
         }
 
         paymentData['extension_attributes']['thai_tax_invoice'] = {
+            type: taxInvoice.type(),
             name: taxInvoice.name(),
             'tax_id': taxInvoice.taxId(),
-            branch: taxInvoice.branch()
+            branch: taxInvoice.type() === 'company' ? taxInvoice.branch() : ''
         };
     };
 });

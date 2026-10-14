@@ -12,9 +12,27 @@ namespace Peerapatfc\ThaiTaxInvoice\Api\Data;
  */
 interface RequestInterface
 {
+    public const TYPE = 'type';
+    public const TYPE_INDIVIDUAL = 'individual';
+    public const TYPE_COMPANY = 'company';
     public const NAME = 'name';
     public const TAX_ID = 'tax_id';
     public const BRANCH = 'branch';
+
+    /**
+     * Whether the invoice is for a person ("individual") or a juristic person ("company").
+     *
+     * @return string|null
+     */
+    public function getType(): ?string;
+
+    /**
+     * Set whether the invoice is for an individual or a company.
+     *
+     * @param string|null $type
+     * @return $this
+     */
+    public function setType(?string $type): self;
 
     /**
      * Name the invoice is made out to (a person or a company).
@@ -32,7 +50,7 @@ interface RequestInterface
     public function setName(?string $name): self;
 
     /**
-     * The buyer's 13-digit tax ID (or national ID).
+     * The buyer's 13-digit tax ID (an individual may give their national ID, or nothing).
      *
      * @return string|null
      */
@@ -47,7 +65,7 @@ interface RequestInterface
     public function setTaxId(?string $taxId): self;
 
     /**
-     * The buyer's 5-digit branch code, 00000 for a head office.
+     * The buyer's 5-digit branch code, 00000 for a head office. Only a company has one.
      *
      * @return string|null
      */

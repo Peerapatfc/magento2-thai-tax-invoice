@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+The buyer says whether the invoice is for an individual or a company.
+
+- **Company:** name, tax ID and branch are required (the branch starts at 00000).
+- **Individual:** only the name is required. A national or tax ID is optional, checked if given, and there is no
+  branch. Not asking for the ID of a person keeps personal data out of the shop.
+- New column `sales_order.thai_tax_invoice_type` (`quote` too). Orders and API calls from 0.2.0, which have no type,
+  count as a company.
+
 ## 0.2.0
 
 The buyer can ask for a full tax invoice at checkout.

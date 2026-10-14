@@ -21,6 +21,7 @@ class CopyRequestToOrderTest extends TestCase
     public function testTheRequestMovesFromTheQuoteToTheOrder(): void
     {
         $quote = new DataObject([
+            'thai_tax_invoice_type' => 'company',
             'thai_tax_invoice_name' => 'Acme',
             'thai_tax_invoice_tax_id' => '1101700230678',
             'thai_tax_invoice_branch' => '00001',
@@ -29,6 +30,7 @@ class CopyRequestToOrderTest extends TestCase
 
         $this->dispatch($quote, $order);
 
+        $this->assertSame('company', $order->getData('thai_tax_invoice_type'));
         $this->assertSame('Acme', $order->getData('thai_tax_invoice_name'));
         $this->assertSame('1101700230678', $order->getData('thai_tax_invoice_tax_id'));
         $this->assertSame('00001', $order->getData('thai_tax_invoice_branch'));

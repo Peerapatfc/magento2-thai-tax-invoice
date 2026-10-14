@@ -30,9 +30,9 @@ class RequestSaverTest extends TestCase
         $this->saver = new RequestSaver(new TaxIdentity(), $this->config, $this->cartRepository);
     }
 
-    private function request(?string $name, ?string $taxId, ?string $branch): Request
+    private function request(?string $name, ?string $taxId, ?string $branch, ?string $type = null): Request
     {
-        return (new Request())->setName($name)->setTaxId($taxId)->setBranch($branch);
+        return (new Request())->setType($type)->setName($name)->setTaxId($taxId)->setBranch($branch);
     }
 
     /**
@@ -68,6 +68,53 @@ class RequestSaverTest extends TestCase
         $this->assertSame('Acme Co., Ltd.', $data[RequestSaver::FIELD_NAME]);
         $this->assertSame(self::GOOD_TAX_ID, $data[RequestSaver::FIELD_TAX_ID]);
         $this->assertSame('00001', $data[RequestSaver::FIELD_BRANCH]);
+    }
+
+    public function testATypeThatIsNotSentMeansACompany(): void
+    {
+        $data = [];
+        $this->saver->save($this->quote($data), $this->request('Acme', self::GOOD_TAX_ID, '00001'));
+
+        $this->assertSame('company', $data[RequestSaver::FIELD_TYPE]);
+    }
+
+    public function testAnIndividualNeedsOnlyAName(): void
+    {
+        $data = [];
+        $this->saver->save($this->quote($data), $this->request('สมชาย ใจดี', '', '', 'individual'));
+
+        $this->assertSame('individual', $data[RequestSaver::FIELD_TYPE]);
+        $this->assertSame('สมชาย ใจดี', $data[RequestSaver::FIELD_NAME]);
+        $this->assertNull($data[RequestSaver::FIELD_TAX_ID] ?? null);
+        $this->assertNull($data[RequestSaver::FIELD_BRANCH] ?? null);
+    }
+
+    public function testAnIndividualHasNoBranchEvenIfOneIsSent(): void
+    {
+        $data = [];
+        $this->saver->save(
+            $this->quote($data),
+            $this->request('สมชาย ใจดี', self::GOOD_TAX_ID, '00005', 'individual')
+        );
+
+        $this->assertSame(self::GOOD_TAX_ID, $data[RequestSaver::FIELD_TAX_ID]);
+        $this->assertNull($data[RequestSaver::FIELD_BRANCH] ?? null);
+    }
+
+    public function testAnIndividualsTaxIdIsCheckedWhenGiven(): void
+    {
+        $data = [];
+        $this->expectException(InputException::class);
+
+        $this->saver->save($this->quote($data), $this->request('สมชาย ใจดี', '1101700230679', '', 'individual'));
+    }
+
+    public function testRefusesAnUnknownType(): void
+    {
+        $data = [];
+        $this->expectException(InputException::class);
+
+        $this->saver->save($this->quote($data), $this->request('Acme', self::GOOD_TAX_ID, '00000', 'partnership'));
     }
 
     public function testAnEmptyBranchMeansTheHeadOffice(): void
@@ -127,13 +174,14 @@ class RequestSaverTest extends TestCase
     public function testTheSameRequestIsNotSavedTwice(): void
     {
         $data = [
+            RequestSaver::FIELD_TYPE => 'company',
             RequestSaver::FIELD_NAME => 'Acme',
             RequestSaver::FIELD_TAX_ID => self::GOOD_TAX_ID,
             RequestSaver::FIELD_BRANCH => '00000',
         ];
         $this->cartRepository->expects($this->never())->method('save');
 
-        $this->saver->save($this->quote($data), $this->request('Acme', self::GOOD_TAX_ID, '00000'));
+        $this->saver->save($this->quote($data), $this->request('Acme', self::GOOD_TAX_ID, '00000', 'company'));
     }
 
     public function testIsIgnoredAndClearedWhenTheCheckoutOptionIsOff(): void
