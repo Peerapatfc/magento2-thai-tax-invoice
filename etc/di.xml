@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Peerapatfc\ThaiTaxInvoice\Api\TaxIdCheckInterface" type="Peerapatfc\ThaiTaxInvoice\Model\TaxIdCheck"/>
+    <preference for="Peerapatfc\ThaiTaxInvoice\Api\Data\RequestInterface" type="Peerapatfc\ThaiTaxInvoice\Model\Request"/>
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="peerapatfc_thai_tax_invoice_customer" type="Peerapatfc\ThaiTaxInvoice\Plugin\SaveOnCustomerPayment"/>
+    </type>
+    <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+        <plugin name="peerapatfc_thai_tax_invoice_guest" type="Peerapatfc\ThaiTaxInvoice\Plugin\SaveOnGuestPayment"/>
+    </type>
 </config>

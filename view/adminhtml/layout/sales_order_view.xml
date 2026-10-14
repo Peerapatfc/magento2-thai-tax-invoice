@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order_additional_info">
+            <block class="Magento\Framework\View\Element\Template" name="peerapatfc_thai_tax_invoice"
+                   template="Peerapatfc_ThaiTaxInvoice::order/tax-invoice.phtml" after="-">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Peerapatfc\ThaiTaxInvoice\ViewModel\Adminhtml\OrderTaxInvoice</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

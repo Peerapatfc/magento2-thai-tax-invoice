@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Peerapatfc\ThaiTaxInvoice\ViewModel\Adminhtml\OrderTaxInvoice $viewModel
+ */
+$viewModel = $block->getData('view_model');
+$request = $viewModel->getRequest();
+if ($request === null) {
+    return;
+}
+?>
+<section class="admin__page-section order-tax-invoice">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Full tax invoice requested')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <table class="admin__table-secondary">
+            <tbody>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Name on the invoice')) ?></th>
+                <td><?= $escaper->escapeHtml($request['name']) ?></td>
+            </tr>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Tax ID')) ?></th>
+                <td><?= $escaper->escapeHtml($request['tax_id']) ?></td>
+            </tr>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Branch code')) ?></th>
+                <td><?= $escaper->escapeHtml($request['branch']) ?></td>
+            </tr>
+            </tbody>
+        </table>
+        <p><?= $escaper->escapeHtml(__('The invoice is made out to the billing address of this order.')) ?></p>
+    </div>
+</section>

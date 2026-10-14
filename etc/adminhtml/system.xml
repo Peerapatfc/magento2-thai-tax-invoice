@@ -5,6 +5,14 @@
             <label>Thai Tax Invoice</label>
             <tab>general</tab>
             <resource>Peerapatfc_ThaiTaxInvoice::config</resource>
+            <group id="checkout" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Checkout</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Offer a full tax invoice</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Luma checkout, payment step. The buyer gives the name, tax ID and branch for the invoice; the address is the billing address.</comment>
+                </field>
+            </group>
             <group id="seller" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Seller (the business issuing the invoice)</label>
                 <field id="name" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

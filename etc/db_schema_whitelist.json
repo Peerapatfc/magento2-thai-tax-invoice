@@ -1,0 +1,16 @@
+{
+    "quote": {
+        "column": {
+            "thai_tax_invoice_name": true,
+            "thai_tax_invoice_tax_id": true,
+            "thai_tax_invoice_branch": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "thai_tax_invoice_name": true,
+            "thai_tax_invoice_tax_id": true,
+            "thai_tax_invoice_branch": true
+        }
+    }
+}

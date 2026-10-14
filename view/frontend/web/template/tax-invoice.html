@@ -1,0 +1,35 @@
+<div class="thai-tax-invoice" data-bind="visible: isEnabled">
+    <div class="field choice">
+        <input type="checkbox" id="thai-tax-invoice-requested" name="thai_tax_invoice_requested"
+               class="checkbox"
+               data-bind="checked: requested, event: {change: onToggle}">
+        <label class="label" for="thai-tax-invoice-requested">
+            <span translate="'I want a full tax invoice'"></span>
+        </label>
+    </div>
+    <div class="thai-tax-invoice-fields" data-bind="visible: requested">
+        <div class="message error" data-bind="visible: error, text: error"></div>
+        <div class="field required">
+            <label class="label" for="thai-tax-invoice-name"><span translate="'Name on the invoice'"></span></label>
+            <div class="control">
+                <input type="text" id="thai-tax-invoice-name" class="input-text" maxlength="255"
+                       data-bind="value: buyerName, valueUpdate: 'afterkeydown'">
+            </div>
+        </div>
+        <div class="field required">
+            <label class="label" for="thai-tax-invoice-tax-id"><span translate="'Tax ID (13 digits)'"></span></label>
+            <div class="control">
+                <input type="text" id="thai-tax-invoice-tax-id" class="input-text" maxlength="20" inputmode="numeric"
+                       data-bind="value: taxId, valueUpdate: 'afterkeydown'">
+            </div>
+        </div>
+        <div class="field required">
+            <label class="label" for="thai-tax-invoice-branch"><span translate="'Branch code (00000 = head office)'"></span></label>
+            <div class="control">
+                <input type="text" id="thai-tax-invoice-branch" class="input-text" maxlength="5" inputmode="numeric"
+                       data-bind="value: branch, valueUpdate: 'afterkeydown'">
+            </div>
+        </div>
+        <div class="note"><span translate="'The invoice is made out to your billing address.'"></span></div>
+    </div>
+</div>
