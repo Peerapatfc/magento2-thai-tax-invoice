@@ -9,6 +9,9 @@ define([
     return {
         requested: ko.observable(false),
         type: ko.observable('company'),
+        vatRegistered: ko.observable(true),
+        sameAddress: ko.observable(true),
+        address: ko.observable(''),
         name: ko.observable(''),
         taxId: ko.observable(''),
         branch: ko.observable('00000'),

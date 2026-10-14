@@ -4,7 +4,9 @@
             "thai_tax_invoice_name": true,
             "thai_tax_invoice_tax_id": true,
             "thai_tax_invoice_branch": true,
-            "thai_tax_invoice_type": true
+            "thai_tax_invoice_type": true,
+            "thai_tax_invoice_vat_registered": true,
+            "thai_tax_invoice_address": true
         }
     },
     "sales_order": {
@@ -12,7 +14,9 @@
             "thai_tax_invoice_name": true,
             "thai_tax_invoice_tax_id": true,
             "thai_tax_invoice_branch": true,
-            "thai_tax_invoice_type": true
+            "thai_tax_invoice_type": true,
+            "thai_tax_invoice_vat_registered": true,
+            "thai_tax_invoice_address": true
         }
     }
 }

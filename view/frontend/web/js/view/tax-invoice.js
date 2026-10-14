@@ -15,8 +15,12 @@ define([
 
     var config = window.checkoutConfig.thaiTaxInvoice || {};
 
-    // An old message about the other type would only confuse.
-    taxInvoice.type.subscribe(function () {
+    // A company is nearly always registered for VAT and a person nearly never: suggest it, the buyer can change it.
+    taxInvoice.type.subscribe(function (type) {
+        taxInvoice.vatRegistered(type === 'company');
+        taxInvoice.error('');
+    });
+    taxInvoice.vatRegistered.subscribe(function () {
         taxInvoice.error('');
     });
 
@@ -26,7 +30,7 @@ define([
          */
         validate: function () {
             var problem = null,
-                isCompany = taxInvoice.type() === 'company',
+                vat = taxInvoice.vatRegistered(),
                 taxId = taxInvoice.taxId();
 
             if (!config.enabled || !taxInvoice.requested()) {
@@ -35,10 +39,12 @@ define([
 
             if (!taxInvoice.name().trim()) {
                 problem = $t('Enter the name for the tax invoice.');
-            } else if ((isCompany || identity.normalize(taxId) !== '') && !identity.isValidTaxId(taxId)) {
+            } else if ((vat || identity.normalize(taxId) !== '') && !identity.isValidTaxId(taxId)) {
                 problem = $t('The tax ID must be 13 digits with a correct check digit.');
-            } else if (isCompany && !identity.isValidBranch(taxInvoice.branch())) {
+            } else if (vat && !identity.isValidBranch(taxInvoice.branch())) {
                 problem = $t('The branch code must be 5 digits. Use 00000 for a head office.');
+            } else if (!taxInvoice.sameAddress() && !taxInvoice.address().trim()) {
+                problem = $t('Enter the address for the tax invoice.');
             }
 
             taxInvoice.error(problem || '');
@@ -54,8 +60,17 @@ define([
         isEnabled: !!config.enabled,
         requested: taxInvoice.requested,
         type: taxInvoice.type,
+        vatRegistered: taxInvoice.vatRegistered,
+        sameAddress: taxInvoice.sameAddress,
+        address: taxInvoice.address,
         isCompany: ko.pureComputed(function () {
             return taxInvoice.type() === 'company';
+        }),
+        notVatRegistered: ko.pureComputed(function () {
+            return !taxInvoice.vatRegistered();
+        }),
+        differentAddress: ko.pureComputed(function () {
+            return !taxInvoice.sameAddress();
         }),
         buyerName: taxInvoice.name,
         taxId: taxInvoice.taxId,

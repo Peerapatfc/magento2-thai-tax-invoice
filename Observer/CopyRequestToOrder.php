@@ -18,6 +18,8 @@ class CopyRequestToOrder implements ObserverInterface
 {
     private const FIELDS = [
         RequestSaver::FIELD_TYPE,
+        RequestSaver::FIELD_VAT_REGISTERED,
+        RequestSaver::FIELD_ADDRESS,
         RequestSaver::FIELD_NAME,
         RequestSaver::FIELD_TAX_ID,
         RequestSaver::FIELD_BRANCH,

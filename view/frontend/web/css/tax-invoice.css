@@ -29,13 +29,19 @@
 
 .thai-tax-invoice-fields .message,
 .thai-tax-invoice-fields .field-type,
-.thai-tax-invoice-fields .field-name,
+.thai-tax-invoice-fields .field-wide,
 .thai-tax-invoice-fields .note {
     grid-column: 1 / -1;
 }
 
 .thai-tax-invoice-fields .field {
     margin: 0;
+}
+
+.thai-tax-invoice-fields .field.choice .label {
+    display: inline;
+    font-weight: 400;
+    margin: 0 0 0 8px;
 }
 
 .thai-tax-invoice-fields .field .label {
@@ -54,6 +60,11 @@
 
 .thai-tax-invoice-fields .input-text {
     width: 100%;
+}
+
+.thai-tax-invoice-fields textarea.input-text {
+    height: auto;
+    resize: vertical;
 }
 
 .thai-tax-invoice-fields .note {
@@ -84,10 +95,6 @@
     margin-right: 6px;
 }
 
-/* An individual has no branch, so the tax ID takes the whole row. */
-.thai-tax-invoice-fields .field.field-wide {
-    grid-column: 1 / -1;
-}
 
 @media (max-width: 640px) {
     .thai-tax-invoice-fields {

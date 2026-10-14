@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0
+
+The form follows what the Revenue Department asks for (Revenue Code section 86/4 and Notification No. 199), which
+depends on whether the buyer is registered for VAT, not on whether they are a person or a company.
+
+- **Registered for VAT** (a box, ticked for a company and not for an individual until the buyer changes it): the tax ID
+  and the branch are required, for a person as well as a company. This is what the buyer needs to claim input tax.
+- **Not registered:** only the name is required. A tax ID is optional but checked when given, and there is no branch.
+- **Address on the invoice:** by default the billing address. The buyer can untick "Use my billing address" and type
+  the registered address instead (up to 500 characters). The law asks for the address of the establishment as
+  registered, which can differ from the billing address.
+- Name label: "Company name, as registered" or "First and last name".
+- New columns `thai_tax_invoice_vat_registered` and `thai_tax_invoice_address` on `quote` and `sales_order`. Orders
+  from before have neither: they count as registered when they have a tax ID, and as using the billing address.
+
 ## 0.3.0
 
 The buyer says whether the invoice is for an individual or a company.

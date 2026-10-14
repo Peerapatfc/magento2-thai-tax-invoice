@@ -34,10 +34,16 @@ class OrderTaxInvoice implements ArgumentInterface
             return null;
         }
 
+        $taxId = (string)$order->getData('thai_tax_invoice_tax_id');
+        $vat = $order->getData('thai_tax_invoice_vat_registered');
+
         return [
             'type' => (string)$order->getData('thai_tax_invoice_type') ?: 'company',
+            // Orders from before the flag existed: registered when a tax ID was given.
+            'vat_registered' => $vat === null ? $taxId !== '' : (bool)$vat,
+            'address' => (string)$order->getData('thai_tax_invoice_address'),
             'name' => (string)$order->getData('thai_tax_invoice_name'),
-            'tax_id' => (string)$order->getData('thai_tax_invoice_tax_id'),
+            'tax_id' => $taxId,
             'branch' => (string)$order->getData('thai_tax_invoice_branch'),
         ];
     }

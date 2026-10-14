@@ -72,4 +72,38 @@ class Request extends AbstractSimpleObject implements RequestInterface
     {
         return $this->setData(self::BRANCH, $branch);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getVatRegistered(): ?bool
+    {
+        $value = $this->_get(self::VAT_REGISTERED);
+
+        return $value === null ? null : (bool)$value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setVatRegistered(?bool $vatRegistered): RequestInterface
+    {
+        return $this->setData(self::VAT_REGISTERED, $vatRegistered);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAddress(): ?string
+    {
+        return $this->_get(self::ADDRESS);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAddress(?string $address): RequestInterface
+    {
+        return $this->setData(self::ADDRESS, $address);
+    }
 }

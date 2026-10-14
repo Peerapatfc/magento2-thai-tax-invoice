@@ -5,11 +5,16 @@ issue an invoice yet.**
 
 ## What it does now
 
-- **Checkout (Luma):** on the payment step the buyer can tick "I want a full tax invoice", choose **company** or **individual** and
-  give the name, tax ID and branch (a company needs the tax ID and branch; an individual only the name, the ID is
-  optional and there is no branch). They are checked in the browser and again on the server (guests and signed-in customers), kept on the
-  order and shown in the admin order view. The invoice address is the billing address. Turn it off under
-  **Stores > Configuration > General > Thai Tax Invoice > Checkout**.
+- **Checkout (Luma):** on the payment step the buyer can tick "I want a full tax invoice" and give the name, say
+  whether they are **registered for VAT**, and give the address for the invoice.
+  - Registered for VAT: tax ID and branch are required (a person as well as a company), because the seller has to
+    print them and the buyer needs them to claim input tax.
+  - Not registered: only the name is required; a tax ID is optional.
+  - The address is the billing address unless the buyer types the registered address.
+
+  Everything is checked in the browser and again on the server (guests and signed-in customers), kept on the order
+  and shown in the admin order view. Turn it off under **Stores > Configuration > General > Thai Tax Invoice >
+  Checkout**.
 - Checks a Thai **tax ID** (13 digits with a correct check digit) and a **branch code** (5 digits, `00000` is the
   head office). Thai digits, spaces and dashes are accepted and removed.
 - Keeps the **seller's details** in **Stores > Configuration > General > Thai Tax Invoice**: registered name, tax ID,
@@ -19,7 +24,9 @@ issue an invoice yet.**
 
 A correct check digit does **not** mean the number is registered. The module never asks the Revenue Department.
 
-This is software, not tax advice. What a full tax invoice must show about the buyer, and when, is set by the Revenue
+The buyer rules are taken from the Revenue Department's pages on [section 86/4](https://www.rd.go.th/5208.html),
+[Notification No. 199](https://www.rd.go.th/27982.html) and [its explanation](https://rd.go.th/49981.html). This is
+software, not tax advice. What a full tax invoice must show about the buyer, and when, is set by the Revenue
 Department: check it with your accountant before you rely on it.
 
 ## What it does not do yet

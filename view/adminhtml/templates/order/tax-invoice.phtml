@@ -28,17 +28,26 @@ if ($request === null) {
                 <td><?= $escaper->escapeHtml($request['name']) ?></td>
             </tr>
             <tr>
+                <th><?= $escaper->escapeHtml(__('Registered for VAT')) ?></th>
+                <td><?= $escaper->escapeHtml($request['vat_registered'] ? __('Yes') : __('No')) ?></td>
+            </tr>
+            <tr>
                 <th><?= $escaper->escapeHtml(__('Tax ID')) ?></th>
                 <td><?= $escaper->escapeHtml($request['tax_id'] !== '' ? $request['tax_id'] : __('Not given')) ?></td>
             </tr>
-            <?php if ($request['type'] === 'company'): ?>
+            <?php if ($request['vat_registered']): ?>
             <tr>
                 <th><?= $escaper->escapeHtml(__('Branch code')) ?></th>
                 <td><?= $escaper->escapeHtml($request['branch']) ?></td>
             </tr>
             <?php endif; ?>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Address on the invoice')) ?></th>
+                <td style="white-space: pre-line;"><?= $escaper->escapeHtml(
+                    $request['address'] === '' ? __('The billing address of this order') : $request['address']
+                ) ?></td>
+            </tr>
             </tbody>
         </table>
-        <p><?= $escaper->escapeHtml(__('The invoice is made out to the billing address of this order.')) ?></p>
     </div>
 </section>

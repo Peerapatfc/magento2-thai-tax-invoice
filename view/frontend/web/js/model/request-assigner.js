@@ -19,9 +19,11 @@ define([
 
         paymentData['extension_attributes']['thai_tax_invoice'] = {
             type: taxInvoice.type(),
+            'vat_registered': taxInvoice.vatRegistered(),
             name: taxInvoice.name(),
             'tax_id': taxInvoice.taxId(),
-            branch: taxInvoice.type() === 'company' ? taxInvoice.branch() : ''
+            branch: taxInvoice.vatRegistered() ? taxInvoice.branch() : '',
+            address: taxInvoice.sameAddress() ? '' : taxInvoice.address()
         };
     };
 });

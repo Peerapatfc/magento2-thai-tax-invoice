@@ -15,6 +15,8 @@ interface RequestInterface
     public const TYPE = 'type';
     public const TYPE_INDIVIDUAL = 'individual';
     public const TYPE_COMPANY = 'company';
+    public const VAT_REGISTERED = 'vat_registered';
+    public const ADDRESS = 'address';
     public const NAME = 'name';
     public const TAX_ID = 'tax_id';
     public const BRANCH = 'branch';
@@ -78,4 +80,37 @@ interface RequestInterface
      * @return $this
      */
     public function setBranch(?string $branch): self;
+
+    /**
+     * Whether the buyer is registered for VAT.
+     *
+     * Then the tax ID and the branch are required on the invoice. Left out, it is taken as true when a tax ID is
+     * given.
+     *
+     * @return bool|null
+     */
+    public function getVatRegistered(): ?bool;
+
+    /**
+     * Set whether the buyer is registered for VAT.
+     *
+     * @param bool|null $vatRegistered
+     * @return $this
+     */
+    public function setVatRegistered(?bool $vatRegistered): self;
+
+    /**
+     * The address for the invoice, as registered. Empty means the billing address of the order.
+     *
+     * @return string|null
+     */
+    public function getAddress(): ?string;
+
+    /**
+     * Set the address for the invoice.
+     *
+     * @param string|null $address
+     * @return $this
+     */
+    public function setAddress(?string $address): self;
 }

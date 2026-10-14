@@ -12,19 +12,33 @@ use Peerapatfc\ThaiTaxInvoice\Api\Data\RequestInterface;
 /**
  * Checks a tax invoice request and keeps it on the quote, from where it is copied to the order.
  *
- * A company must give a tax ID and a branch. An individual must give a name; their tax or national ID is optional
- * (but checked when given) and they have no branch.
+ * The rule that matters is whether the buyer is registered for VAT, not whether they are a person or a company:
+ * a buyer registered for VAT must give a tax ID and a branch (00000 is the head office) so the seller can put them
+ * on the invoice. Anyone else only needs a name; a tax ID is optional, but checked when given.
+ *
+ * The address on the invoice is the billing address unless the buyer types another one (the registered address).
  *
  * With no request (the buyer did not ask, or changed their mind) the quote is cleared.
  */
 class RequestSaver
 {
     public const FIELD_TYPE = 'thai_tax_invoice_type';
+    public const FIELD_VAT_REGISTERED = 'thai_tax_invoice_vat_registered';
     public const FIELD_NAME = 'thai_tax_invoice_name';
     public const FIELD_TAX_ID = 'thai_tax_invoice_tax_id';
     public const FIELD_BRANCH = 'thai_tax_invoice_branch';
+    public const FIELD_ADDRESS = 'thai_tax_invoice_address';
 
-    private const FIELDS = [self::FIELD_TYPE, self::FIELD_NAME, self::FIELD_TAX_ID, self::FIELD_BRANCH];
+    private const MAX_ADDRESS_LENGTH = 500;
+
+    private const FIELDS = [
+        self::FIELD_TYPE,
+        self::FIELD_VAT_REGISTERED,
+        self::FIELD_NAME,
+        self::FIELD_TAX_ID,
+        self::FIELD_BRANCH,
+        self::FIELD_ADDRESS,
+    ];
 
     /**
      * @param TaxIdentity $identity
@@ -49,12 +63,12 @@ class RequestSaver
     public function save(Quote $quote, ?RequestInterface $request): void
     {
         $values = $this->isEmpty($request) || !$this->config->isCheckoutEnabled($quote->getStoreId())
-            ? [null, null, null, null]
+            ? array_fill(0, count(self::FIELDS), null)
             : $this->validated($request);
 
         $changed = false;
         foreach (self::FIELDS as $index => $field) {
-            if ($quote->getData($field) !== $values[$index]) {
+            if (!$this->same($quote->getData($field), $values[$index])) {
                 $quote->setData($field, $values[$index]);
                 $changed = true;
             }
@@ -63,6 +77,18 @@ class RequestSaver
         if ($changed) {
             $this->cartRepository->save($quote);
         }
+    }
+
+    /**
+     * Whether a stored value (a string from the database) is the one about to be saved.
+     *
+     * @param mixed $stored
+     * @param mixed $new
+     * @return bool
+     */
+    private function same(mixed $stored, mixed $new): bool
+    {
+        return $stored === null || $new === null ? $stored === $new : (string)$stored === (string)$new;
     }
 
     /**
@@ -76,11 +102,12 @@ class RequestSaver
         return $request === null
             || trim((string)$request->getName()) === ''
             && trim((string)$request->getTaxId()) === ''
-            && trim((string)$request->getBranch()) === '';
+            && trim((string)$request->getBranch()) === ''
+            && trim((string)$request->getAddress()) === '';
     }
 
     /**
-     * Returns the cleaned type, name, tax ID and branch, or throws for the first thing that is wrong.
+     * Returns the cleaned values in the order of FIELDS, or throws for the first thing that is wrong.
      *
      * @param RequestInterface $request
      * @return array
@@ -99,18 +126,25 @@ class RequestSaver
         }
 
         $taxId = $this->identity->normalize((string)$request->getTaxId());
-        $isCompany = $type === RequestInterface::TYPE_COMPANY;
-        if (($isCompany || $taxId !== '') && !$this->identity->isValidTaxId($taxId)) {
+        $vatRegistered = $request->getVatRegistered() ?? $taxId !== '';
+        if (($vatRegistered || $taxId !== '') && !$this->identity->isValidTaxId($taxId)) {
             throw new InputException(
                 __('"%1" is not a valid tax ID. It must be 13 digits with a correct check digit.', $request->getTaxId())
             );
         }
 
-        return [$type, $name, $taxId === '' ? null : $taxId, $isCompany ? $this->branch($request) : null];
+        return [
+            $type,
+            $vatRegistered ? 1 : 0,
+            $name,
+            $taxId === '' ? null : $taxId,
+            $vatRegistered ? $this->branch($request) : null,
+            $this->address($request),
+        ];
     }
 
     /**
-     * Returns the cleaned branch code of a company: 00000 when it is left empty.
+     * Returns the cleaned branch code of a VAT-registered buyer: 00000 when it is left empty.
      *
      * @param RequestInterface $request
      * @return string
@@ -129,5 +163,24 @@ class RequestSaver
         }
 
         return $branch;
+    }
+
+    /**
+     * Returns the typed address, or null for "the billing address".
+     *
+     * @param RequestInterface $request
+     * @return string|null
+     * @throws InputException
+     */
+    private function address(RequestInterface $request): ?string
+    {
+        $address = trim((string)preg_replace('/[ \t]+/u', ' ', (string)$request->getAddress()));
+        if (mb_strlen($address) > self::MAX_ADDRESS_LENGTH) {
+            throw new InputException(
+                __('The address for the tax invoice must be at most %1 characters.', self::MAX_ADDRESS_LENGTH)
+            );
+        }
+
+        return $address === '' ? null : $address;
     }
 }

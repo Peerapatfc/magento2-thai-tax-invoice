@@ -9,7 +9,7 @@
     </div>
     <div class="thai-tax-invoice-fields" data-bind="visible: requested">
         <div class="message error" data-bind="visible: error, text: error"></div>
-        <div class="field required field-type">
+        <div class="field field-type">
             <span class="label" translate="'Invoice for'"></span>
             <div class="thai-tax-invoice-types">
                 <label for="thai-tax-invoice-type-company">
@@ -24,30 +24,51 @@
                 </label>
             </div>
         </div>
-        <div class="field required field-name">
-            <label class="label" for="thai-tax-invoice-name"><span translate="'Name on the invoice'"></span></label>
+        <div class="field required field-wide">
+            <label class="label" for="thai-tax-invoice-name">
+                <span data-bind="visible: isCompany" translate="'Company name, as registered'"></span>
+                <span data-bind="visible: !isCompany()" translate="'First and last name'"></span>
+            </label>
             <div class="control">
                 <input type="text" id="thai-tax-invoice-name" class="input-text" maxlength="255"
                        data-bind="value: buyerName, valueUpdate: 'afterkeydown'">
             </div>
         </div>
-        <div class="field" data-bind="css: {required: isCompany, 'field-wide': !isCompany()}">
+        <div class="field choice field-wide">
+            <input type="checkbox" id="thai-tax-invoice-vat" class="checkbox" data-bind="checked: vatRegistered">
+            <label class="label" for="thai-tax-invoice-vat">
+                <span translate="'Registered for VAT (needed to claim input tax)'"></span>
+            </label>
+        </div>
+        <div class="field" data-bind="css: {required: vatRegistered, 'field-wide': notVatRegistered}">
             <label class="label" for="thai-tax-invoice-tax-id">
-                <span data-bind="visible: isCompany" translate="'Tax ID (13 digits)'"></span>
-                <span data-bind="visible: !isCompany()" translate="'National ID or tax ID (13 digits, optional)'"></span>
+                <span data-bind="visible: vatRegistered" translate="'Tax ID (13 digits)'"></span>
+                <span data-bind="visible: notVatRegistered" translate="'National ID or tax ID (13 digits, optional)'"></span>
             </label>
             <div class="control">
                 <input type="text" id="thai-tax-invoice-tax-id" class="input-text" maxlength="20" inputmode="numeric"
                        data-bind="value: taxId, valueUpdate: 'afterkeydown'">
             </div>
         </div>
-        <div class="field required" data-bind="visible: isCompany">
+        <div class="field required" data-bind="visible: vatRegistered">
             <label class="label" for="thai-tax-invoice-branch"><span translate="'Branch code (00000 = head office)'"></span></label>
             <div class="control">
                 <input type="text" id="thai-tax-invoice-branch" class="input-text" maxlength="5" inputmode="numeric"
                        data-bind="value: branch, valueUpdate: 'afterkeydown'">
             </div>
         </div>
-        <div class="note"><span translate="'The invoice is made out to your billing address.'"></span></div>
+        <div class="field choice field-wide">
+            <input type="checkbox" id="thai-tax-invoice-same-address" class="checkbox" data-bind="checked: sameAddress">
+            <label class="label" for="thai-tax-invoice-same-address">
+                <span translate="'Use my billing address on the invoice'"></span>
+            </label>
+        </div>
+        <div class="field required field-wide" data-bind="visible: differentAddress">
+            <label class="label" for="thai-tax-invoice-address"><span translate="'Address on the invoice (as registered)'"></span></label>
+            <div class="control">
+                <textarea id="thai-tax-invoice-address" class="input-text" rows="3" maxlength="500"
+                          data-bind="value: address, valueUpdate: 'afterkeydown'"></textarea>
+            </div>
+        </div>
     </div>
 </div>
